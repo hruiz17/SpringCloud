@@ -6,12 +6,28 @@ spring:
         uri: lb://servicio-productos
         predicates:
           - Path=/api/productos/**
+          - Header=token, \d+
+          - Header=Content-Type,application/json
+          - Method=GET, POST
+          - Query=color, verde
+          - Cookie=color, azul
         filters:
-          - StripPrefix=2 
+          - StripPrefix=2
+          - name: EjemploCookie
+            args:
+              mensaje: Hola mi mensaje personalizado
+              cookieNombre: usuario
+              cookieValor: PedroPerez   
       - id: servicio-items
         uri: lb://servicio-items
         predicates:
           - Path=/api/items/**
         filters:
-          - StripPrefix=2               
+          - StripPrefix=2 
+          - EjemploCookie=Mensaje personalizado, usuario, BetoPerez
+          - AddRequestHeader=token-request, 123456
+          - AddResponseHeader=token-response, 7654321
+          - SetResponseHeader=Content-Type, text/plain
+          - AddRequestParameter=nombre, Pedro
+                        
                 
